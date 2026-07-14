@@ -1,124 +1,78 @@
-let qrcode = "";
-let imgResultQrCode = '';
-let qrCodeTitle = '';
-let genQRCodeName = '';
+// Reset Form values function
+function resetFormValues(){
+    // Reset values
+    $("#formAddCustomerClaim")[0].reset();
+    $('select[name="quarter"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="customer"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="sender_name"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="contributor"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="validity"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="product_classification"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="automotive"]', $("#formAddCustomerClaim")).val(0).trigger('change');
+    $('select[name="defect_category_class"]', $("#formAddCustomerClaim")).val(0).trigger('change');
 
-$(document).ready(function(){	
-	$(document).on('click', '.aGenerateBarcode', function(){
-		let barcode = $(this).attr('barcode');
-		qrCodeTitle = $(this).attr('title');
-		genQRCodeName = $(this).attr('name');
-		qrcode = barcode;
-	    $.ajax({
-	        url: "generate_qrcode",
-	        method: "get",
-	        data: {
-	        	qrcode: barcode
-	        },
-	        // dataType: "json",
-	        beforeSend: function(){
-	            
-	        },
-	        success: function(JsonObject){
-				if(JsonObject['result'] == 1){
-					$("#imgGenBarcode").attr("src", JsonObject['qrcode']);
-					imgResultQrCode = JsonObject['qrcode'];
-				}
-				$("#lblGenBarcodeVal").text(barcode);
-	        },
-	        error: function(data, xhr, status){
-	            alert('An error occured!\n' + 'Data: ' + data + "\n" + "XHR: " + xhr + "\n" + "Status: " + status);
-	            
-	        }
-	    });
-	});
+    // Remove invalid & title validation
+    $('div').find('input').removeClass('is-invalid');
+    $("div").find('input').attr('title', '');
+    $('div').find('select').removeClass('is-invalid');
+    $("div").find('select').attr('title', '');
+    $("div").find('input[type="date"]').attr('title', '');
 
-	$("#btnPrintBarcode").click(function(){
-		// popup = window.open();
-		// // popup.document.write('<br><br><div style="border: 2px solid black; padding: 1px 1px; max-width: 100px;" class="rotated"><img src="' + imgResultQrCode + '" style="max-width: 100px;"><br><center><label style="text-align: center; font-weight: bold; font-family: Arial;">' + qrcode + '</label></center></div>');
-		// let content = '';
-		// content += '<html>';
-		// content += '<head>';
-		// 	content += '<title></title>';
-		// 	content += '<style type="text/css">';
-		// 		content += '.rotated {';
-		// 		content += '  transform: rotate(90deg); /* Equal to rotateZ(45deg) */';
-		// 		content += '}';
-		// 	content += '</style>';
-		// content += '</head>';
-		// content += '<body>';
-		// 	//content += '<br><br><br>';
-		// 	content += '<center>';
-		// 	content += '<div class="rotated">';
-		// 	content += '<table>';
-		// 	content += '<tr>';
-		// 	content += '<td>';
-		// 	content += '<center>';
-		// 	content += '<img src="' + imgResultQrCode + '" style="max-width: 100px;">';
-		// 	content += '<br>';
-		// 	content += '<label style="text-align: center; font-weight: bold; font-family: Arial;">' + qrcode + '</label>';
-		// 	content += '</center>';
-		// 	content += '</td>';
-		// 	// content += '<td>';
-		// 	// content += '<label style="text-align: center; font-weight: bold; font-family: Arial; font-size: 14px;">' + genQRCodeName + ' <br> </label>';
-		// 	// content += '</td>';
-		// 	content += '</tr>';
-		// 	content += '</table>';
-		// 	content += '</div>';
-		// 	content += '</center>';
-		// content += '</body>';
-		// content += '</html>';
-		// popup.document.write(content);
-		// popup.focus(); //required for IE
-		// popup.print();
-		// popup.close();
+    $('#chkActualDateReceivedClaim').attr('checked', false);
+    $('#txtAddActualDateReceivedOfClaim').attr('disabled', true);
+    $('#chkdateReturnClaim').attr('checked', false);
+    $('#txtAddDateReturnOfClaimSample').attr('disabled', true);
+}
 
-		popup = window.open();
-        // popup.document.write('<br><br><div style="border: 2px solid black; padding: 1px 1px; max-width: 100px;" class="rotated"><img src="' + imgResultUserQrCode + '" style="max-width: 100px;"><br><center><label style="text-align: center; font-weight: bold; font-family: Arial;">' + qrcode + '</label></center></div>');
-        let content = '';
-        content += '<html>';
-        content += '<head>';
-          content += '<title></title>';
-          content += '<style type="text/css">';
-            content += '.rotated {';
-              // content += 'transform: rotate(270deg); /* Equal to rotateZ(45deg) */';
-              content += 'border: 2px solid black;';
-              content += 'width: 150px;';
-              content += 'position: absolute;';
-              content += 'left: 15px;';
-              content += 'top: 15px;';
-            content += '}';
-          content += '</style>';
-        content += '</head>';
-        content += '<body>';
-          //content += '<br><br><br>';
-          content += '<center>';
-          content += '<div class="rotated">';
-          content += '<table>';
-          content += '<tr>';
-          content += '<td>';
-          content += '<center>';
-          content += '<img src="' + imgResultQrCode + '" style="max-width: 70px;">';
-          // content += '<br>';
-          // content += '<label style="text-align: center; font-weight: bold; font-family: Arial;">' + genUserqrcode + '</label>';
-          content += '</center>';
-          content += '</td>';
-          content += '<td>';
-          content += '<label style="text-align: center; font-weight: bold; font-family: Arial; font-size: 6px;">' + qrCodeTitle + '</label>';
-          // content += '<label style="text-align: center; font-weight: bold; font-family: Arial; font-size: 6px;">PO NO.:</label>';
-          content += '<br>';
-          content += '<label style="text-align: center; font-weight: bold; font-family: Arial Narrow; font-size: 10px;">' + genQRCodeName + '</label>';
-          // content += '<label style="text-align: center; font-weight: bold; font-family: Arial Narrow; font-size: 10px;">450198990900010</label>';
-          content += '</td>';
-          content += '</tr>';
-          content += '</table>';
-          content += '</div>';
-          content += '</center>';
-        content += '</body>';
-        content += '</html>';
-        popup.document.write(content);
-        popup.focus(); //required for IE
-        popup.print();
-        popup.close();
-	});
+
+// Reset values when modalAddCustomerClaim(Modal) is closed
+$("#modalAddCustomerClaim").on('hidden.bs.modal', function(){
+    resetFormValues();
+});
+
+
+// Reset Form values function
+function resetFormValuesEmailRecipient(){
+    // Reset values
+    $("#formAddEmailRecipient")[0].reset();
+
+    // Reset hidden input fields
+    $("input[name='user_id']", $('#formAddEmailRecipient')).val('');
+    $("input[name='email_recipient_id']", $('#formAddEmailRecipient')).val('');
+    $("input[name='recipient_name']", $('#formAddEmailRecipient')).val('');
+
+    // Reset values
+    $("select[name='recipient_name_display']", $('#formAddEmailRecipient')).val(0).trigger('change');
+    $("select[name='section']", $('#formAddEmailRecipient')).val(0).trigger('change');
+
+    // Remove invalid & title validation
+    $('div').find('input').removeClass('is-invalid');
+    $("div").find('input').attr('title', '');
+    $('div').find('select').removeClass('is-invalid');
+    $("div").find('select').attr('title', '');
+}
+
+
+$("#modalAddEmailRecipient").on('hidden.bs.modal', function(){
+    resetFormValuesEmailRecipient();
+});
+
+
+// Reset Form(Product Classification) values function
+function resetFormValuesProductClassification(){
+    // Reset values
+    $("#formAddProductClassification")[0].reset();
+
+    // Reset hidden input fields
+    $("input[name='product_name']", $('#formAddProductClassification')).val('');
+    $("input[name='product_details']", $('#formAddProductClassification')).val('');
+
+    // Remove invalid & title validation
+    $('div').find('input').removeClass('is-invalid');
+    $("div").find('input').attr('title', '');
+}
+
+
+$("#modalAddProductClassification").on('hidden.bs.modal', function(){
+    resetFormValuesProductClassification();
 });

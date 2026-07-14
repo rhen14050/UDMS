@@ -1,0 +1,45 @@
+
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+/* 
+    ================ Custom Modal ================ 
+*/
+.modal-xl-custom{
+    width: 95% !important;
+    min-width: 90% !important;
+}
+
+
+/* 
+    ================ SmartWizard ================ 
+*/
+.btn-toolbar{
+    display: none !important;
+}
+
+/* step */
+.sw-theme-arrows>ul.step-anchor>li.active>a {
+    border-color: #545454!important;
+    color: #fff !important;
+    background: #343a40 !important;
+}
+
+.sw-theme-arrows>ul.step-anchor>li.active>a:after {
+    border-left: 30px solid #343a40!important;
+}
+
+/* done */
+.sw-theme-arrows>ul.step-anchor>li.done>a {
+    border-color: #545454!important;
+    color: #fff !important;
+    background: #343a40 !important;
+}
+
+.sw-theme-arrows>ul.step-anchor>li.done>a:after {
+    border-left: 30px solid #343a40!important;
+}

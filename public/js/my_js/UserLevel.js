@@ -8,24 +8,18 @@ function GetUserLevel(cboElement){
             result = '<option value="0" selected disabled> -- Loading -- </option>';
             cboElement.html(result);
         },
-        success: function(JsonObject){
+        success: function(response){
             result = '';
-            if(JsonObject['user_levels'].length > 0){
-                result = '<option value="0" selected disabled> -- Select User Level -- </option>';
-                for(let index = 0; index < 3; index++){
-                    result += '<option value="' + JsonObject['user_levels'][index].id + '">' + JsonObject['user_levels'][index].name + '</option>';
+            if(response['user_levels'].length > 0){ // true
+                result = '<option value="0" selected disabled> Select User Level </option>';
+                for(let index = 0; index < response['user_levels'].length; index++){
+                    result += '<option value="' + response['user_levels'][index].id + '">' + response['user_levels'][index].name + '</option>';
                 }
             }
             else{
-                result = '<option value="0" selected disabled> -- No record found -- </option>';
+                result = '<option value="0" selected disabled> No record found </option>';
             }
-
             cboElement.html(result);
-        },
-        error: function(data, xhr, status){
-            result = '<option value="0" selected disabled> -- Reload Again -- </option>';
-            cboElement.html(result);
-            console.log('Data: ' + data + "\n" + "XHR: " + xhr + "\n" + "Status: " + status);
         }
     });
 }
