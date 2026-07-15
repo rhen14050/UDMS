@@ -453,7 +453,7 @@ class UdPpcInputController extends Controller
 
             // $recipientEmails = 'group-iss-software@pricon.ph';
             $recipientEmails = 'group-tsf3@pricon.ph';
-            $bcc = ['mrronquez@pricon.ph', 'jgsulit@pricon.ph'];
+            $bcc = ['mrronquez@pricon.ph', 'jgsulit@pricon.ph', 'cpagtalunan@pricon.ph'];
             $bcc = array_diff($bcc, [$recipientEmails]);
 
             Mail::to($recipientEmails)
