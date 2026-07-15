@@ -15,6 +15,7 @@ class SecondDiscussionDetails extends Model
         'ppc_input_id',    // <--- Add this line here
         'date',
         'attendees',
+        'attendees_role',
         'cp_sei',
         'cp_special_runcard',
         'cp_inspection_data',

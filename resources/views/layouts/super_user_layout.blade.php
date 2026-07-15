@@ -10,31 +10,6 @@
 @endphp
 
 @if($isLogin)
-    <!--
-        *These are the sessions in RapidX System(for reference only)
-
-        $_SESSION["rapidx_user_id"] = Auth::user()->id;
-        $_SESSION["rapidx_user_level_id"] = Auth::user()->user_level_id;
-        $_SESSION["rapidx_username"] = Auth::user()->username;
-        $_SESSION["rapidx_name"] = Auth::user()->name;
-        $_SESSION["rapidx_department_id"] = Auth::user()->department_id;
-
-        $user_accesses = UserAccess::on('mysql')->where('user_id', Auth::user()->id)
-                        ->where('user_access_stat', 1)
-                        ->get();
-
-        $arr_user_accesses = [];
-        for($index = 0; $index < count($user_accesses); $index++) {
-            // $arr_user_accesses['module_id'] = $user_accesses[$index]->module_id;
-            // $arr_user_accesses['user_level_id'] = $user_accesses[$index]->user_level_id;
-            array_push($arr_user_accesses, array(
-                'module_id' => $user_accesses[$index]->module_id,
-                'user_level_id' => $user_accesses[$index]->user_level_id
-            ));
-        }
-
-        $_SESSION["rapidx_user_accesses"] = $arr_user_accesses;
-    -->
 
     @if($_SESSION['rapidx_user_level_id'] == 5) <!-- 1-Super User, 2-Administrator, 3-User, 4-QAD Admin, 5-Other Section -->
         @if(count($_SESSION['rapidx_user_accesses']) > 0) <!-- Count the rapidx_user_accesses session based on RapidX session -->

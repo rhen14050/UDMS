@@ -243,6 +243,7 @@ class UdPpcInputController extends Controller
                     $secondDiscussionDetails->ppc_input_id = $ppcInput->id;
                     $secondDiscussionDetails->date = $request->meeting_date;
                     $secondDiscussionDetails->attendees = $request->select_attendees ? implode(',', $request->select_attendees) : null;
+                    $secondDiscussionDetails->attendees_role = $request->select_attendee_role ? implode(',', $request->select_attendee_role) : null;
                     $secondDiscussionDetails->created_by = $_SESSION["rapidx_user_id"] ?? 0;
                     if ($request->hasFile('orcto_attachment')) {
                         $file = $request->file('orcto_attachment');

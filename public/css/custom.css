@@ -3,11 +3,11 @@
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden !important;
+    /* overflow: hidden !important; */
 }
 
-/* 
-    ================ Custom Modal ================ 
+/*
+    ================ Custom Modal ================
 */
 .modal-xl-custom{
     width: 95% !important;
@@ -15,8 +15,8 @@ body {
 }
 
 
-/* 
-    ================ SmartWizard ================ 
+/*
+    ================ SmartWizard ================
 */
 .btn-toolbar{
     display: none !important;

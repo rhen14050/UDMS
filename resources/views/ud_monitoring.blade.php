@@ -49,7 +49,7 @@
             background-color: darkgreen !important;
         }
 
-        /* html, body {
+        html, body {
             height: auto !important;
             overflow: auto !important;
         }
@@ -57,7 +57,7 @@
         .content-wrapper {
             height: auto !important;
             overflow: visible !important;
-        } */
+        }
 </style>
 @endsection
 
@@ -324,6 +324,22 @@
                                         <label>Attendee/s</label>
                                         <select class="form-control select2bs4 selectAttendees prod-field" id="txtSelectAttendees" name="select_attendees[]" multiple="multiple" style="width: 100%;" disabled>
                                             <option value="">Select Attendee/s</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>Attendee Role</label>
+                                        <select class="form-control select2bs4 selectAttendeeRole prod-field" id="txtselectAttendeeRole" name="select_attendee_role[]" multiple="multiple" style="width: 100%;" disabled>
+                                            <option value="1">Operators</option>
+                                            <option value="2">QC Inspectors</option>
+                                            <option value="3">MH</option>
+                                            <option value="4">Technician</option>
                                         </select>
                                     </div>
                                 </div>
@@ -867,6 +883,24 @@
                                 if (prodData) {
                                     $('#txtMeetingDate').val(prodData.date);
                                     let attendeesString = prodData.attendees;
+                                    let attendeeRoleString = prodData.attendees_role;
+
+                                    if(attendeeRoleString){
+                                        let attendeesRoleToArray = attendeeRoleString.split(',').map(item => item.trim());
+                                        $('#txtselectAttendeeRole').val(attendeesRoleToArray).trigger('change');
+
+
+                                            $('#txtMeetingDate').prop('readonly',true);
+                                            $('#txtselectAttendeeRole').next('.select2-container').css({
+                                                'pointer-events': 'none',
+                                                'opacity': '1', // Optional: slight fade to show it's locked
+                                            });
+
+                                            $('#txtselectAttendeeRole').next('.select2-container').find('.select2-selection').css({
+                                                'background-color': '#e9ecef'
+                                            });
+                                            $('#txtselectAttendeeRole').next('.select2-container').find('.select2-search--inline').hide();
+                                    }
 
                                     getAttendeesByRapidX('#txtSelectAttendees', function() {
                                         if (attendeesString) {
@@ -1237,6 +1271,7 @@
 
             $('#modalSaveUdDetails').on('hidden.bs.modal', function () {
                 $('#frmSaveUdDetails')[0].reset();
+                $('#txtselectTest').val(null)
                 $('#txtSentByFromYec').val(null).trigger('change').prop('readonly', false);
                 $('#txtAttentionToPmiPpc').val(null).trigger('change').prop('readonly', false);
                 $('#txtSelectUdControlNumber').val(null).trigger('change').prop('readonly', false);
