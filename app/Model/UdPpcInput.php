@@ -16,7 +16,7 @@ class UdPpcInput extends Model
         return $this->hasOne(SecondDiscussionDetails::class, 'ppc_input_id', 'id');
     }
 
-     public function closing_details(){
+    public function closing_details(){
         return $this->hasOne(ClosingDetails::class, 'ppc_input_id', 'id');
     }
 

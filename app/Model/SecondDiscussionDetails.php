@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\RapidXUser;
 
 
 class SecondDiscussionDetails extends Model
@@ -25,4 +26,12 @@ class SecondDiscussionDetails extends Model
         'updated_at',
         // Add any other fields from Process 2 here
     ];
+
+    public function getAttendeeUsersAttribute()
+    {
+        return RapidXUser::whereIn(
+            'id',
+            array_filter(explode(',', $this->attendees))
+        )->get();
+    }
 }

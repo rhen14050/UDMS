@@ -38,40 +38,82 @@ class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
     {
         $rows = [];
 
+         $sentBy = [
+            '1' => 'YEC - Goto-san',
+            '2' => 'YEC - Chie-san',
+            '3' => 'YEC - Yanagawa-san',
+            '4' => 'YEC - Kondo-san',
+            '5' => 'YEC - Kenta-san',
+        ];
+
+        $attentionTo = [
+            1 => 'Ms. Jessa',
+            2 => 'Mr. Oyama',
+            3 => 'Mr. Tomura',
+            4 => 'Ms. Shibuki',
+            5 => 'Mr. Yanagawa',
+            6 => 'Mr. Goto',
+            7 => 'Mr. Darwin',
+            8 => 'Mr. TJ',
+        ];
+
+        $ppcIncharge = [
+            1 => 'Ms. Jeng',
+            2 => 'Ms. Jessa',
+        ];
+
+        $status = [
+            0 => 'For Production Update(2nd Discussion)',
+            1 => 'For Production Update(SEI)',
+            2 => 'For Production Update(Special Runcard)',
+            3 => 'For Production Update(Inspection Data Sheet)',
+            4 => 'For Production Update(Orientation)',
+            5 => 'For Closing',
+            6 => 'Closed',
+        ];
+
+
+        // dd($this->data);
+
         foreach ($this->data as $item) {
+            $attendees = '';
 
             $rows[] = [
 
-                $item['date_from_yec'],
-                $item['sent_by_from_yec'],
-                $item['attention_to_pmi_ppc'],
-                $item['ud_ctrlno'],
-                $item['revision'],
-                $item['p_name'],
-                $item['qty'],
-                $item['po_num'],
-                $item['date_coverage'],
-                $item['content_of_ud'],
-                $item['date_posted_rapid'],
+                $item['date_from_yec'], // Date of Information from YEC
+                $sentBy[$item['sent_by_from_yec']] ?? '', // "Sent by(from YEC)"
+                $attentionTo[$item['attention_to_pmi_ppc']] ?? '', // Attention to
+                $item['ud_ctrlno'], // ctrl #
+                $item['revision'], // rev
+                $item['p_name'], //  pname
+                $item['qty'], // qty
+                // (string) $item['po_num'], // po_num
+                "'" . $item['po_num'],// po_num
+                $item['date_coverage'], // date coverage
+                $item['content_of_ud'], // content
+                $item['date_posted_rapid'], // date posted
 
-                $item['date_ud_review'],
-                $item['result_ud_review'],
+                $item['date_ud_review'], // ud date
+                $item['date_ud_review'], // ud date
+                $item['result_ud_review'], // result
+
 
                 $item['fd_ppc_date'],
                 $item['fd_ppc_risk_ctrl_no'],
 
-                $item['second_discussion_details']['date'] ?? '',
-                $item['second_discussion_details']['attendees'] ?? '',
-                $item['second_discussion_details']['cp_sei'] ?? '',
-                $item['second_discussion_details']['cp_special_runcard'] ?? '',
-                $item['second_discussion_details']['cp_inspection_data'] ?? '',
-                $item['second_discussion_details']['cp_orientation'] ?? '',
+                $item['second_discussion_details']['date'] ?? '', // date
+                $item['second_discussion_details']['attendees'] ?? '', // attendess
+                $item['second_discussion_details']['cp_sei'] ?? '', // sei
+                $item['second_discussion_details']['cp_special_runcard'] ?? '', // special_runcard
+                $item['second_discussion_details']['cp_inspection_data'] ?? '', // inspection data
+                $item['second_discussion_details']['cp_orientation'] ?? '', // orientation
 
                 $item['closing_details']['production_date'] ?? '',
                 $item['closing_details']['shipment_date'] ?? '',
                 $item['closing_details']['qty'] ?? '',
-                $item['closing_details']['ppc_incharge'] ?? '',
-                strip_tags($item['status'])
+                // $item['closing_details']['ppc_incharge'] ?? '',
+                $ppcIncharge[$item['attention_to_pmi_ppc']] ?? '',
+                 $status[$item['status']] ?? '', // Attention to
 
             ];
         }

@@ -169,6 +169,7 @@
                                     <div class="form-group">
                                         <label>Sent By (From YEC)</label>
                                         <select name="sent_by_from_yec[]" id="txtSentByFromYec" class="form-control select2bs4" multiple="multiple" data-placeholder="Select Sent By">
+                                            <option value="0">N/A</option>
                                             <option value="1">YEC - Goto-san</option>
                                             <option value="2">YEC - Chie-san</option>
                                             <option value="3">YEC - Yanagawa-san</option>
@@ -181,6 +182,7 @@
                                     <div class="form-group">
                                         <label>Attention to: </label>
                                         <select name="attention_to_pmi_ppc[]" id="txtAttentionToPmiPpc" class="form-control select2bs4" multiple="multiple" data-placeholder="Select Attention To">
+                                            <option value="0">N/A</option>
                                             <option value="1">Ms. Jeng</option>
                                             <option value="2">Ms. Jessa</option>
                                             <option value="3">Mr. Oyama</option>

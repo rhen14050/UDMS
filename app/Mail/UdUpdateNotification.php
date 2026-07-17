@@ -39,4 +39,4 @@ class UdUpdateNotification extends Mailable
          return $this->subject('UD Monitoring System Notification')
                     ->view('emails.ud_notification');
     }
-} 
+}

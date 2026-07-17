@@ -140,6 +140,7 @@ class UdPpcInputController extends Controller
     public function getUdControlNumber(Request $request){
         $ud_from_rapid = Rapid::where('doc_type', 'Urgent Direction')
                             // ->where('status', '!=', 'Closed')
+                            ->orWhere('doc_type', 'Special Instruction')
                             ->where('logdel', 0)
                             ->get();
 
@@ -513,121 +514,134 @@ class UdPpcInputController extends Controller
         ], 200);
     }
 
-    // public function export()
-    // {
-    //   $data = UdPpcInput::with(['second_discussion_details', 'closing_details'])
-    //     ->where('logdel', 0)
-    //     ->get();
 
-    //     // return $data;
+    public function export()
+    {
+        $data = UdPpcInput::with([
+            'second_discussion_details',
+            'closing_details'
+        ])->get()->toArray();
 
-    //     return Excel::download(new UdMonitoringExport($data), 'UD_Monitoring.xlsx');
-    // }
 
-public function export()
-{
-    $data = UdPpcInput::with([
-        'second_discussion_details',
-        'closing_details'
-    ])->get()->toArray();
+        $attendeesData = UdPpcInput::with([
+            'second_discussion_details',
+            'closing_details'
+        ])->get();
 
-    // return $data;
+        foreach ($attendeesData as $item) {
 
-    return Excel::download(new UdMonitoringExport($data), 'UD_Monitoring.xlsx');
-}
+            $attendees = '';
 
-public function downloadOrctoAttachment($id)
-{
-    // return $id;
-    $secondDiscussionDetails = SecondDiscussionDetails::where('orcto_attachment', $id)->first();
+            if ($item->second_discussion_details) {
 
-    if (!$secondDiscussionDetails || !$secondDiscussionDetails->orcto_attachment_path) {
-        return response()->json(['message' => 'File not found.'], 404);
+                $attendees = $item->second_discussion_details
+                    ->attendee_users
+                    ->map(function ($user) {
+                        return $user->FirstName . ' ' . $user->LastName;
+                    })
+                    ->implode(', ');
+            }
+
+            // Add $attendees to your export row
+        }
+
+        // return 'qwe';
+
+        return Excel::download(new UdMonitoringExport($data), 'UD_Monitoring.xlsx');
     }
 
-    $filePath = $secondDiscussionDetails->orcto_attachment_path;
+    public function downloadOrctoAttachment($id)
+    {
+        // return $id;
+        $secondDiscussionDetails = SecondDiscussionDetails::where('orcto_attachment', $id)->first();
 
-    if (!Storage::exists($filePath)) {
-        return response()->json(['message' => 'File not found on server.'], 404);
+        if (!$secondDiscussionDetails || !$secondDiscussionDetails->orcto_attachment_path) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
+
+        $filePath = $secondDiscussionDetails->orcto_attachment_path;
+
+        if (!Storage::exists($filePath)) {
+            return response()->json(['message' => 'File not found on server.'], 404);
+        }
+
+        return Storage::download($filePath, $secondDiscussionDetails->orcto_attachment);
     }
 
-    return Storage::download($filePath, $secondDiscussionDetails->orcto_attachment);
-}
 
+    public function downloadSeiAttachment($id)
+    {
+        // return $id;
+        $secondDiscussionDetails = SecondDiscussionDetails::where('cp_sei_attachment', $id)->first();
 
-public function downloadSeiAttachment($id)
-{
-    // return $id;
-    $secondDiscussionDetails = SecondDiscussionDetails::where('cp_sei_attachment', $id)->first();
+        if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_sei_attachment_path) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
 
-    if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_sei_attachment_path) {
-        return response()->json(['message' => 'File not found.'], 404);
+        $filePath = $secondDiscussionDetails->cp_sei_attachment_path;
+
+        if (!Storage::exists($filePath)) {
+            return response()->json(['message' => 'File not found on server.'], 404);
+        }
+
+        return Storage::download($filePath, $secondDiscussionDetails->cp_sei_attachment);
     }
 
-    $filePath = $secondDiscussionDetails->cp_sei_attachment_path;
+    public function downloadIdsAttachment($id)
+    {
+        // return $id;
+        $secondDiscussionDetails = SecondDiscussionDetails::where('cp_inspection_data_attachment', $id)->first();
 
-    if (!Storage::exists($filePath)) {
-        return response()->json(['message' => 'File not found on server.'], 404);
+        if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_inspection_data_attachment_path) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
+
+        $filePath = $secondDiscussionDetails->cp_inspection_data_attachment_path;
+
+        if (!Storage::exists($filePath)) {
+            return response()->json(['message' => 'File not found on server.'], 404);
+        }
+
+        return Storage::download($filePath, $secondDiscussionDetails->cp_inspection_data_attachment);
     }
 
-    return Storage::download($filePath, $secondDiscussionDetails->cp_sei_attachment);
-}
+    public function downloadOrientationAttachment($id)
+    {
+        // return $id;
+        $secondDiscussionDetails = SecondDiscussionDetails::where('cp_orientation_attachment', $id)->first();
 
-public function downloadIdsAttachment($id)
-{
-    // return $id;
-    $secondDiscussionDetails = SecondDiscussionDetails::where('cp_inspection_data_attachment', $id)->first();
+        if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_orientation_attachment_path) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
 
-    if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_inspection_data_attachment_path) {
-        return response()->json(['message' => 'File not found.'], 404);
+        $filePath = $secondDiscussionDetails->cp_orientation_attachment_path;
+
+        if (!Storage::exists($filePath)) {
+            return response()->json(['message' => 'File not found on server.'], 404);
+        }
+
+        return Storage::download($filePath, $secondDiscussionDetails->cp_orientation_attachment);
     }
 
-    $filePath = $secondDiscussionDetails->cp_inspection_data_attachment_path;
+    public function deleteUdPpcInput($id)
+    {
+        $ppcInput = UdPpcInput::find($id);
 
-    if (!Storage::exists($filePath)) {
-        return response()->json(['message' => 'File not found on server.'], 404);
-    }
+        if (!$ppcInput) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Record not found'
+            ], 404);
+        }
 
-    return Storage::download($filePath, $secondDiscussionDetails->cp_inspection_data_attachment);
-}
+        $ppcInput->logdel = 1;
+        $ppcInput->save();
 
-public function downloadOrientationAttachment($id)
-{
-    // return $id;
-    $secondDiscussionDetails = SecondDiscussionDetails::where('cp_orientation_attachment', $id)->first();
-
-    if (!$secondDiscussionDetails || !$secondDiscussionDetails->cp_orientation_attachment_path) {
-        return response()->json(['message' => 'File not found.'], 404);
-    }
-
-    $filePath = $secondDiscussionDetails->cp_orientation_attachment_path;
-
-    if (!Storage::exists($filePath)) {
-        return response()->json(['message' => 'File not found on server.'], 404);
-    }
-
-    return Storage::download($filePath, $secondDiscussionDetails->cp_orientation_attachment);
-}
-
-public function deleteUdPpcInput($id)
-{
-    $ppcInput = UdPpcInput::find($id);
-
-    if (!$ppcInput) {
         return response()->json([
-            'success' => false,
-            'message' => 'Record not found'
-        ], 404);
+            'success' => true,
+            'message' => 'Record deleted successfully'
+        ]);
     }
-
-    $ppcInput->logdel = 1;
-    $ppcInput->save();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Record deleted successfully'
-    ]);
-}
 
 
 
