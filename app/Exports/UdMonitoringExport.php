@@ -13,10 +13,12 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
 {
     protected $data;
+    protected $result;
 
-    public function __construct($data)
+    public function __construct($data, $result)
     {
         $this->data = $data;
+        $this->result = $result;
     }
 
     /*
@@ -72,11 +74,16 @@ class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
             6 => 'Closed',
         ];
 
-
-        // dd($this->data);
+        // $attendeesPerUd = collect($this->result)->keyBy('id');
+        // dd($this->result);
+        $attendeesPerUd = collect($this->result)->keyBy('ppc_input_id');
 
         foreach ($this->data as $item) {
-            $attendees = '';
+             $attendees = '';
+
+            if (isset($attendeesPerUd[$item['id']])) {
+                $attendees = $attendeesPerUd[$item['id']]['attendees'];
+            }
 
             $rows[] = [
 
@@ -102,7 +109,8 @@ class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
                 $item['fd_ppc_risk_ctrl_no'],
 
                 $item['second_discussion_details']['date'] ?? '', // date
-                $item['second_discussion_details']['attendees'] ?? '', // attendess
+                // $item['second_discussion_details']['attendees'] ?? '', // attendess
+                $attendees,
                 $item['second_discussion_details']['cp_sei'] ?? '', // sei
                 $item['second_discussion_details']['cp_special_runcard'] ?? '', // special_runcard
                 $item['second_discussion_details']['cp_inspection_data'] ?? '', // inspection data
@@ -112,7 +120,7 @@ class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
                 $item['closing_details']['shipment_date'] ?? '',
                 $item['closing_details']['qty'] ?? '',
                 // $item['closing_details']['ppc_incharge'] ?? '',
-                $ppcIncharge[$item['attention_to_pmi_ppc']] ?? '',
+                $ppcIncharge[$item['closing_details']['ppc_incharge']] ?? '',
                  $status[$item['status']] ?? '', // Attention to
 
             ];
@@ -256,6 +264,15 @@ class UdMonitoringExport implements FromArray, WithEvents, WithCustomStartCell
                     ->getAlignment()
                     ->setWrapText(true)
                     ->setVertical(Alignment::VERTICAL_TOP);
+
+                // Auto-fit row height for all data rows
+                for ($row = 7; $row <= $highestRow; $row++) {
+                    $sheet->getRowDimension($row)->setRowHeight(-1);
+                }
+
+                $sheet->getStyle('R7:R' . $highestRow)
+                ->getAlignment()
+                ->setWrapText(true);
 
                 $sheet->getStyle('H7:H' . $highestRow)
                 ->getNumberFormat()

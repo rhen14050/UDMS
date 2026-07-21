@@ -522,32 +522,34 @@ class UdPpcInputController extends Controller
             'closing_details'
         ])->get()->toArray();
 
+       $ids = array_column($data, 'id');
 
-        $attendeesData = UdPpcInput::with([
-            'second_discussion_details',
-            'closing_details'
-        ])->get();
+    // return $ids;
 
-        foreach ($attendeesData as $item) {
 
-            $attendees = '';
+    $attendeesData = UdPpcInput::with('second_discussion_details')
+        ->whereHas('second_discussion_details', function ($query) use ($ids) {
+            $query->whereIn('id', $ids);
+        })
+        ->get();
 
-            if ($item->second_discussion_details) {
+        $result = $attendeesData->map(function ($item) {
 
-                $attendees = $item->second_discussion_details
-                    ->attendee_users
-                    ->map(function ($user) {
-                        return $user->FirstName . ' ' . $user->LastName;
-                    })
-                    ->implode(', ');
-            }
+        $ids = explode(',', $item->second_discussion_details->attendees);
 
-            // Add $attendees to your export row
-        }
+        $names = RapidXUser::whereIn('id', $ids)
+            ->pluck('name')
+            ->implode(', ');
 
-        // return 'qwe';
+        return [
+            'ppc_input_id' => $item->id,
+            'attendees' => $names,
+        ];
+    });
 
-        return Excel::download(new UdMonitoringExport($data), 'UD_Monitoring.xlsx');
+    // return $result;
+
+        return Excel::download(new UdMonitoringExport($data,$result), 'UD_Monitoring.xlsx');
     }
 
     public function downloadOrctoAttachment($id)

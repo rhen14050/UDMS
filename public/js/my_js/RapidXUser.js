@@ -1,3 +1,4 @@
+
 function GetRapidXUser(cboElement){
 	let result = '<option value="0" disabled selected>Select One</option>';
 	$.ajax({
